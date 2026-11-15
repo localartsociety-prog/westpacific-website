@@ -6,6 +6,7 @@ import {
   EVENTS_DATA,
   DIRECTORY_ARTISTS,
   WORKSHOPS_DATA,
+  WORKSHOP_PARTNERS,
   MANDATE_ITEMS,
   SPONSOR_TIERS,
   PLAIN_LANGUAGE_SUMMARIES,
@@ -28,10 +29,37 @@ test("filterEvents filters by category and search query", () => {
   assert.equal(filterEvents(EVENTS_DATA, "Concerts", "nonexistent").length, 0);
 });
 
-test("filterDirectoryArtists filters by discipline and search query", () => {
+test("filterDirectoryArtists filters by discipline, Other Art, and search query", () => {
   assert.equal(filterDirectoryArtists(DIRECTORY_ARTISTS, "All", "").length, 4);
   assert.equal(filterDirectoryArtists(DIRECTORY_ARTISTS, "Ceramics", "").length, 1);
-  assert.equal(filterDirectoryArtists(DIRECTORY_ARTISTS, "All", "Musician").length, 1);
+  assert.equal(filterDirectoryArtists(DIRECTORY_ARTISTS, "Other Art", "").length, 0);
+  assert.equal(filterDirectoryArtists(DIRECTORY_ARTISTS, "All", "Music").length, 1);
+});
+
+test("directory cards are live now and titled Artist without Future or Coming Soon", () => {
+  assert.equal(DIRECTORY_ARTISTS.length, 4);
+  for (const card of DIRECTORY_ARTISTS) {
+    assert.equal(card.name, "Artist");
+    assert.equal(card.statusBadge, "Open Now • Greater Vancouver");
+    assert.equal(/future|coming soon/i.test(JSON.stringify(card)), false);
+  }
+  const dirComponent = fs.readFileSync(
+    path.resolve(process.cwd(), "src/components/DirectoryView.js"),
+    "utf8"
+  );
+  assert.equal(/future|coming soon/i.test(dirComponent), false);
+});
+
+test("workshops and partner cards match exact specifications", () => {
+  assert.deepEqual(
+    WORKSHOPS_DATA.map((w) => w.title),
+    [
+      "Block Printing on Cotton Bags",
+      "Hand-Built Clay Pottery",
+      "Botanical Watercolour Painting",
+    ]
+  );
+  assert.equal(WORKSHOP_PARTNERS.length, 4);
 });
 
 test("getBoothTierDetails returns exact $120 and $150 booth prices", () => {
@@ -122,7 +150,6 @@ test("content and components contain zero forbidden jargon or maker terminology"
     }
   }
 
-  assert.equal(WORKSHOPS_DATA.length, 3);
   assert.equal(MANDATE_ITEMS.length, 4);
   assert.equal(SPONSOR_TIERS.length, 4);
   assert.equal(BOARD_MEMBERS.length, 3);

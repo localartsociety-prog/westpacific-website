@@ -22,6 +22,7 @@ const INITIAL_ARTIST_FORM = {
   email: "",
   phone: "",
   discipline: "Visual Art / Painting / Illustration",
+  customArtType: "",
   portfolioLink: "",
   accommodations: "",
   photoName: "",
@@ -45,12 +46,13 @@ export default function LocalArtApp() {
   const [dirDiscipline, setDirDiscipline] = useState("All");
   const [dirSearch, setDirSearch] = useState("");
 
-  // Workshop 3-Field Contact Modal state
+  // Workshop 4-Field Contact Modal state
   const [selectedWorkshop, setSelectedWorkshop] = useState(null);
   const [bookingForm, setBookingForm] = useState({
     fullName: "",
     contact: "",
-    joinRole: "I want to take this class when it opens",
+    joinRole: "I am an artist / teacher with a workshop idea",
+    ideaOrLocation: "",
   });
   const [bookingConfirmed, setBookingConfirmed] = useState(null);
   const [bookingError, setBookingError] = useState("");
@@ -58,7 +60,7 @@ export default function LocalArtApp() {
   // Artist Application & Booth Selector state ($120 Standard / $150 Full 10x10)
   const [selectedBoothTier, setSelectedBoothTier] = useState("standard_120");
   const [opportunityType, setOpportunityType] = useState(
-    "Market Booth ($120 Standard / $150 Full 10x10)"
+    "Get Listed in the Artist Directory (Free & Open Now)"
   );
   const [artistForm, setArtistForm] = useState(INITIAL_ARTIST_FORM);
   const [autoSaveTimestamp, setAutoSaveTimestamp] = useState(
@@ -141,11 +143,13 @@ export default function LocalArtApp() {
       attendee: bookingForm.fullName.trim(),
       contact: bookingForm.contact.trim(),
       joinRole: bookingForm.joinRole,
+      ideaOrLocation: bookingForm.ideaOrLocation.trim(),
     });
     setBookingForm({
       fullName: "",
       contact: "",
-      joinRole: "I want to take this class when it opens",
+      joinRole: "I am an artist / teacher with a workshop idea",
+      ideaOrLocation: "",
     });
     setSelectedWorkshop(null);
   };
@@ -177,7 +181,11 @@ export default function LocalArtApp() {
   };
 
   const handleSelectArtistFromDirectory = (artTypeOption) => {
-    updateArtistField("discipline", artTypeOption);
+    setOpportunityType("Get Listed in the Artist Directory (Free & Open Now)");
+    updateArtistField(
+      "discipline",
+      artTypeOption || "Other Art Type (Write below)"
+    );
     navigateTo("artists");
   };
 

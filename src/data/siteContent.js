@@ -76,81 +76,95 @@ export const EVENTS_DATA = [
 export const WORKSHOPS_DATA = [
   {
     id: "ws-1",
-    title: "Block Printing on Cotton Tote Bags",
+    title: "Block Printing on Cotton Bags",
     skillLevel: "Beginners Welcome",
     statusBadge: "Coming Soon",
-    teacherNotice:
-      "Teacher Spot Open — Are you an artist who wants to teach this class? Contact us.",
     summary:
-      "You will carve a simple design and print it onto your own cotton tote bag. No prior art experience will be needed.",
-    suppliesIncluded:
-      "We will include carving blocks, safe tools, inks, rollers, and two cotton tote bags for free.",
-    plannedFormat: "90-minute outdoor shaded tent class • All ages 12+",
+      "You will carve a simple design and print it on a cotton bag. All art supplies will be free.",
+    callout:
+      "Want to teach this class, host it at your space, or suggest an idea? Contact us.",
   },
   {
     id: "ws-2",
-    title: "Hand-Built Clay Pottery Class",
+    title: "Hand-Built Clay Pottery",
     skillLevel: "Beginners Welcome",
     statusBadge: "Coming Soon",
-    teacherNotice:
-      "Teacher Spot Open — Are you an artist who wants to teach this class? Contact us.",
     summary:
-      "You will shape and decorate a small clay bowl or cup by hand. A local potter will guide you step by step.",
-    suppliesIncluded:
-      "We will include natural stoneware clay, wooden shaping tools, aprons, and kiln firing for free.",
-    plannedFormat: "90-minute indoor community studio class • All ages",
+      "You will shape and decorate a small clay bowl by hand. All clay, tools, and firing will be free.",
+    callout:
+      "Want to teach this class, host it at your space, or suggest an idea? Contact us.",
   },
   {
     id: "ws-3",
     title: "Botanical Watercolour Painting",
     skillLevel: "Beginners Welcome",
     statusBadge: "Coming Soon",
-    teacherNotice:
-      "Teacher Spot Open — Are you an artist who wants to teach this class? Contact us.",
     summary:
-      "You will paint local Pacific plants and leaves using simple watercolour techniques. You will take your finished painting home.",
-    suppliesIncluded:
-      "We will include thick cotton watercolour paper, artist paints, soft brushes, and water cups for free.",
-    plannedFormat: "90-minute studio class • Youth and adults",
+      "You will paint local Pacific plants using simple watercolour steps. All paper, brushes, and paints will be free.",
+    callout:
+      "Want to teach this class, host it at your space, or suggest an idea? Contact us.",
+  },
+];
+
+export const WORKSHOP_PARTNERS = [
+  {
+    title: "Coffee Shops, Cafés & Bakeries",
+    description:
+      "Host a 90-minute art class during quiet afternoon hours to welcome new local visitors.",
+  },
+  {
+    title: "Hotels, Lounges & Co-Working Spaces",
+    description:
+      "Offer a welcoming lobby, lounge, or meeting room for a free community art workshop.",
+  },
+  {
+    title: "Craft Breweries, Studios & Galleries",
+    description:
+      "Share your communal tables or studio space for beginner pottery, print, or paint sessions.",
+  },
+  {
+    title: "Artists, Teachers & Anyone With an Idea",
+    description:
+      "Have a workshop idea or skill to share? We pay teachers and provide all free art supplies.",
   },
 ];
 
 export const DIRECTORY_ARTISTS = [
   {
     id: "dir-1",
-    name: "Future Ceramic & Pottery Artist",
+    name: "Artist",
     discipline: "Ceramics",
     artTypeOption: "Ceramics / Pottery / Sculpture",
-    locationBadge: "Coming Soon • Greater Vancouver",
+    statusBadge: "Open Now • Greater Vancouver",
     description:
-      "You are an artist who wants to be featured here? Contact us to join our upcoming directory.",
+      "Want to be listed here? Contact us. If your art type is not listed yet, we will add it now.",
   },
   {
     id: "dir-2",
-    name: "Future Print & Visual Artist",
+    name: "Artist",
     discipline: "Print",
     artTypeOption: "Printmaking / Photography",
-    locationBadge: "Coming Soon • Greater Vancouver",
+    statusBadge: "Open Now • Greater Vancouver",
     description:
-      "You are an artist who wants to be featured here? Contact us to join our upcoming directory.",
+      "Want to be listed here? Contact us. If your art type is not listed yet, we will add it now.",
   },
   {
     id: "dir-3",
-    name: "Future Textile & Fibre Artist",
+    name: "Artist",
     discipline: "Textile",
     artTypeOption: "Textiles / Wearable Art",
-    locationBadge: "Coming Soon • Greater Vancouver",
+    statusBadge: "Open Now • Greater Vancouver",
     description:
-      "You are an artist who wants to be featured here? Contact us to join our upcoming directory.",
+      "Want to be listed here? Contact us. If your art type is not listed yet, we will add it now.",
   },
   {
     id: "dir-4",
-    name: "Future Local Musician or Band",
+    name: "Artist",
     discipline: "Music",
     artTypeOption: "Live Music / Acoustic Performance",
-    locationBadge: "Coming Soon • Greater Vancouver",
+    statusBadge: "Open Now • Greater Vancouver",
     description:
-      "You are an artist who wants to be featured here? Contact us to join our upcoming directory.",
+      "Want to be listed here? Contact us. If your art type is not listed yet, we will add it now.",
   },
 ];
 
@@ -201,10 +215,10 @@ export const SPONSOR_TIERS = [
 ];
 
 export const PLAIN_LANGUAGE_SUMMARIES = {
-  en: "We are launching soon in Greater Vancouver. We will host free public art markets, shows, concerts, and workshops. Local artists will pay low booth fees ($120 to $150) and keep 100% of their sales.",
-  fr: "Nous lançons bientôt nos activités dans le Grand Vancouver. Nous organiserons des marchés d'art, concerts et ateliers gratuits. Les artistes paieront des frais réduits (120 $ à 150 $) et garderont 100 % de leurs ventes.",
-  zh: "我们即将在大温哥华地区推出首季活动。我们将举办免费的公共艺术市集、展览、音乐会与工作坊。本地艺术家仅需支付低廉展位费（$120至$150），并保留100%的销售收入。",
-  pa: "ਅਸੀਂ ਜਲਦੀ ਹੀ ਗ੍ਰੇਟਰ ਵੈਨਕੂਵਰ ਵਿੱਚ ਆਪਣਾ ਪਹਿਲਾ ਸੀਜ਼ਨ ਸ਼ੁਰੂ ਕਰਾਂਗੇ। ਅਸੀਂ ਮੁਫ਼ਤ ਕਲਾ ਬਾਜ਼ਾਰ, ਸ਼ੋਅ, ਸੰਗੀਤ ਅਤੇ ਵਰਕਸ਼ਾਪਾਂ ਲਗਾਵਾਂਗੇ। ਸਥਾਨਕ ਕਲਾਕਾਰ ਘੱਟ ਫੀਸ ($120 ਤੋਂ $150) ਦੇਣਗੇ ਅਤੇ ਆਪਣੀ ਵਿਕਰੀ ਦਾ 100% ਰੱਖਣਗੇ।",
+  en: "Our Artist Directory is open now in Greater Vancouver. Free public markets, shows, concerts, and workshops are coming soon. Local artists pay low booth fees ($120 to $150) and keep 100% of their sales.",
+  fr: "Notre répertoire d'artistes est ouvert maintenant dans le Grand Vancouver. Nos marchés, concerts et ateliers gratuits arrivent bientôt. Les artistes paient des frais réduits (120 $ à 150 $) et gardent 100 % de leurs ventes.",
+  zh: "我们的大温哥华艺术家名录现已开放。免费公共艺术市集、展览、音乐会与工作坊即将推出。本地艺术家仅需支付低廉展位费（$120至$150），并保留100%的销售收入。",
+  pa: "ਸਾਡੀ ਕਲਾਕਾਰ ਸੂਚੀ ਹੁਣ ਗ੍ਰੇਟਰ ਵੈਨਕੂਵਰ ਵਿੱਚ ਖੁੱਲ੍ਹੀ ਹੈ। ਮੁਫ਼ਤ ਕਲਾ ਬਾਜ਼ਾਰ, ਸ਼ੋਅ, ਸੰਗੀਤ ਅਤੇ ਵਰਕਸ਼ਾਪਾਂ ਜਲਦੀ ਆ ਰਹੀਆਂ ਹਨ। ਸਥਾਨਕ ਕਲਾਕਾਰ ਘੱਟ ਫੀਸ ($120 ਤੋਂ $150) ਦੇਣਗੇ ਅਤੇ ਆਪਣੀ ਵਿਕਰੀ ਦਾ 100% ਰੱਖਣਗੇ।",
 };
 
 export const BOARD_MEMBERS = [

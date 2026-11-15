@@ -18,6 +18,8 @@ export default function ArtistsView({
   pauseMotion,
 }) {
   const tierInfo = getBoothTierDetails(selectedBoothTier);
+  const isDirectoryOnly =
+    opportunityType === "Get Listed in the Artist Directory (Free & Open Now)";
 
   const cardSurface = highContrast
     ? "bg-zinc-950 border-2 border-white text-white"
@@ -40,19 +42,19 @@ export default function ArtistsView({
   return (
     <div className="space-y-8 text-left">
       <div className="space-y-3 max-w-[65ch]">
-        <span className={`inline-block px-3 py-1 rounded text-xs ${comingSoonBadge}`}>
-          Coming Soon • $0 Jury Fees • Artists Keep 100% of Sales
+        <span className={`inline-block px-3 py-1 rounded text-xs ${freeBadge}`}>
+          Directory Open Now • Future Markets ($120 – $150) • 0% Sales Commission
         </span>
         <h1
           className={`font-display text-3xl font-extrabold ${
             highContrast ? "text-white" : "text-[#0F2942]"
           }`}
         >
-          Artist Opportunities: Markets, Shows, Concerts &amp; Classes
+          Artist Opportunities: Directory, Markets, Shows &amp; Classes
         </h1>
         <p className="text-base max-w-[65ch]">
-          We will publish our exact booth prices upfront before you join our list. Every
-          artist will get an individual booth with no shared tables and 0% sales commission.
+          You can join our Local Artist Directory today for free. We also publish our future
+          booth prices upfront with no shared tables and 0% commission.
         </p>
       </div>
 
@@ -181,13 +183,13 @@ export default function ArtistsView({
                 highContrast ? "text-white" : "text-[#0F2942]"
               }`}
             >
-              Join Our Future Artist List
+              Join Our Artist Directory or Future Event List
             </h2>
             <p className="text-sm max-w-[65ch]">
-              We will contact you first when our Greater Vancouver market dates open.
+              Join the Local Artist Directory today, or sign up early for upcoming markets.
             </p>
           </div>
-          <span className={`px-3 py-1.5 rounded text-xs tabular-nums ${freeBadge}`}>
+          <span className={`px-3 py-1.5 rounded text-xs tabular-nums ${comingSoonBadge}`}>
             Selected Booth: {tierInfo.label}
           </span>
         </div>
@@ -203,11 +205,23 @@ export default function ArtistsView({
           >
             <h3 className="font-display text-lg font-bold flex items-center gap-2">
               <CheckCircle2 className="w-5 h-5 shrink-0" />
-              <span>We added {artistForm.artistName} to our future artist list</span>
+              <span>We saved {artistForm.artistName} to our artist list</span>
             </h3>
             <p className="text-sm max-w-[65ch]">
-              We will email <strong>{artistForm.email}</strong> when dates open. You will only
-              pay the ${tierInfo.fee} booth fee after we confirm your space.
+              {isDirectoryOnly ? (
+                <>
+                  We will email <strong>{artistForm.email}</strong> about adding your profile
+                  {artistForm.customArtType?.trim()
+                    ? ` (${artistForm.customArtType.trim()})`
+                    : ""}{" "}
+                  to the Local Artist Directory right away. Listing in the directory is free.
+                </>
+              ) : (
+                <>
+                  We will email <strong>{artistForm.email}</strong> when dates open. You will
+                  only pay the ${tierInfo.fee} booth fee after we confirm your space.
+                </>
+              )}
             </p>
             <button
               type="button"
@@ -232,7 +246,7 @@ export default function ArtistsView({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label htmlFor="artist-opportunity" className="block font-bold mb-1.5">
-                  How would you like to take part?
+                  What would you like to do?
                 </label>
                 <select
                   id="artist-opportunity"
@@ -240,8 +254,11 @@ export default function ArtistsView({
                   onChange={(e) => setOpportunityType(e.target.value)}
                   className="w-full px-3 py-2.5 rounded-lg border border-[#E2DDD5] bg-white text-[#111827] min-h-[42px]"
                 >
-                  <option value="Market Booth ($120 Standard / $150 Full 10x10)">
-                    Market Booth ($120 Standard / $150 Full 10x10)
+                  <option value="Get Listed in the Artist Directory (Free & Open Now)">
+                    Get Listed in the Artist Directory (Free &amp; Open Now)
+                  </option>
+                  <option value="Future Market Booth ($120 Standard / $150 Full 10x10)">
+                    Future Market Booth ($120 Standard / $150 Full 10x10)
                   </option>
                   <option value="Community Art Exhibition (Artists Receive Fair Pay)">
                     Community Art Exhibition (Artists Receive Fair Pay)
@@ -276,8 +293,25 @@ export default function ArtistsView({
                   <option value="Live Music / Acoustic Performance">
                     Live Music / Acoustic Performance
                   </option>
+                  <option value="Other Art Type (Write below)">
+                    Other Art Type (Write below)
+                  </option>
                 </select>
               </div>
+            </div>
+
+            <div>
+              <label htmlFor="artist-custom-type" className="block font-bold mb-1.5">
+                If your art type is not listed above, write it here (We will add it now):
+              </label>
+              <input
+                id="artist-custom-type"
+                type="text"
+                value={artistForm.customArtType || ""}
+                onChange={(e) => updateArtistField("customArtType", e.target.value)}
+                placeholder="e.g., Woodcarving, Stained Glass, Beadwork, Digital Illustration"
+                className="w-full px-3 py-2.5 rounded-lg border border-[#E2DDD5] bg-white text-[#111827] min-h-[42px]"
+              />
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -374,14 +408,15 @@ export default function ArtistsView({
 
             <div className="pt-2 flex flex-wrap items-center justify-between gap-4">
               <p className="text-sm max-w-[65ch]">
-                You will pay $0 today. We will only invoice your ${tierInfo.fee} booth fee
-                after we confirm your market date.
+                {isDirectoryOnly
+                  ? "Getting listed in our Artist Directory is free and open now."
+                  : `You will pay $0 today. We will only invoice your $${tierInfo.fee} booth fee after we confirm your market date.`}
               </p>
               <button
                 type="submit"
                 className={`px-6 py-3 rounded-lg text-sm min-h-[42px] whitespace-nowrap ${primaryBtn} ${motionClass}`}
               >
-                Join Future Artist List
+                {isDirectoryOnly ? "Join Artist Directory" : "Join Future Artist List"}
               </button>
             </div>
           </form>

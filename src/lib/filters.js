@@ -14,6 +14,9 @@ export function filterEvents(events, category, searchQuery) {
 
 export function filterDirectoryArtists(artists, discipline, searchQuery) {
   const normalizedQuery = (searchQuery || "").trim().toLowerCase();
+  if (discipline === "Other Art") {
+    return [];
+  }
   return artists.filter((artist) => {
     const matchesDiscipline =
       discipline === "All" || artist.discipline === discipline;
@@ -22,6 +25,7 @@ export function filterDirectoryArtists(artists, discipline, searchQuery) {
     return (
       artist.name.toLowerCase().includes(normalizedQuery) ||
       artist.discipline.toLowerCase().includes(normalizedQuery) ||
+      artist.artTypeOption.toLowerCase().includes(normalizedQuery) ||
       artist.description.toLowerCase().includes(normalizedQuery)
     );
   });
@@ -48,7 +52,7 @@ export function validateWorkshopContact(form) {
   if (!name || !contact) {
     return {
       valid: false,
-      error: "Please enter your name and your email or phone number.",
+      error: "Please enter your name or business name and your email or phone number.",
     };
   }
   return { valid: true, error: "" };
