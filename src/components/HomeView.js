@@ -65,8 +65,8 @@ export default function HomeView({ onNavigate, highContrast, pauseMotion }) {
             }`}
           >
             We will organize friendly art markets, exhibitions, concerts, and beginner
-            workshops across Greater Vancouver. Every event will be free for visitors, and
-            local artists will keep 100% of their sales.
+            workshops across Greater Vancouver. Every event will be free for visitors. Local
+            artists will keep 100% of their sales.
           </p>
         </div>
 
@@ -92,8 +92,8 @@ export default function HomeView({ onNavigate, highContrast, pauseMotion }) {
               </h2>
 
               <p className="text-sm max-w-[65ch]">
-                You will walk in without a ticket. You will meet local visual artists, enjoy
-                live music, and try hands-on workshops with free supplies.
+                You will walk in without a ticket. You will meet local artists and enjoy live
+                music. Beginners will try free workshops with supplies included.
               </p>
 
               <ul className="text-sm space-y-2 pt-1">

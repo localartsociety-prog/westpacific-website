@@ -84,7 +84,7 @@ export const WORKSHOPS_DATA = [
     summary:
       "You will carve a simple design and print it onto your own cotton tote bag. No prior art experience will be needed.",
     suppliesIncluded:
-      "We will include all carving blocks, safe cutting tools, water-based inks, rollers, and two cotton tote bags for free.",
+      "We will include carving blocks, safe tools, inks, rollers, and two cotton tote bags for free.",
     plannedFormat: "90-minute outdoor shaded tent class • All ages 12+",
   },
   {
@@ -224,6 +224,6 @@ export const VOLUNTEER_ROLES = [
     title: "Site Setup & Tent Weight Crew",
     demand: "Active outdoor role • Lifting up to 20 lbs",
     description:
-      "You will help place folding tables, chairs, and 20-lb canopy safety weights before the market opens to the public.",
+      "You will place folding tables, chairs, and tent weights before the market opens.",
   },
 ];
