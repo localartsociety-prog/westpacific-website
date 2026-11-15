@@ -1,3 +1,36 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  html {
+    background-color: #F8F6F2;
+    color: #111827;
+  }
+
+  body {
+    font-family: var(--font-atkinson), system-ui, sans-serif;
+    line-height: 1.65;
+    letter-spacing: 0.012em;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-lexend), system-ui, sans-serif;
+    text-wrap: balance;
+  }
+
+  p {
+    line-height: 1.65;
+    letter-spacing: 0.012em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
