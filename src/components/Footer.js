@@ -6,8 +6,8 @@ export default function Footer({ onNavigate, highContrast }) {
     <footer
       className={
         highContrast
-          ? "bg-black border-t-2 border-white text-white mt-16"
-          : "bg-[#0F2942] text-white mt-16"
+          ? "bg-black border-t-2 border-white text-white mt-14"
+          : "bg-[#0F2942] text-white mt-14"
       }
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 grid grid-cols-1 md:grid-cols-2 gap-10 text-left">
@@ -42,7 +42,7 @@ export default function Footer({ onNavigate, highContrast }) {
               onClick={() => onNavigate("artists")}
               className="inline-flex items-center hover:underline min-h-[42px]"
             >
-              Artist Booth Fees ($120 – $150)
+              Artist Opportunities
             </button>
           </div>
         </div>
@@ -63,14 +63,14 @@ export default function Footer({ onNavigate, highContrast }) {
               onClick={() => onNavigate("support")}
               className="inline-flex items-center text-white hover:underline min-h-[42px]"
             >
-              Sponsor an Artist Booth ($120 / $150)
+              Sponsor a Booth
             </button>
             <button
               type="button"
               onClick={() => onNavigate("volunteer")}
               className="inline-flex items-center text-white hover:underline min-h-[42px]"
             >
-              Future Volunteer Roles &amp; Media Info
+              Volunteer &amp; Media List
             </button>
           </div>
         </div>

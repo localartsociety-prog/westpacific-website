@@ -6,10 +6,6 @@ export default function GovernanceView({ onNavigate, highContrast, pauseMotion }
     ? "bg-zinc-950 border-2 border-white text-white"
     : "bg-white border border-[#E2DDD5] text-[#111827] shadow-sm";
 
-  const badge = highContrast
-    ? "bg-yellow-400 text-black font-bold"
-    : "bg-[#FEF3C7] text-[#78350F] font-bold";
-
   const primaryBtn = highContrast
     ? "bg-yellow-400 text-black font-bold border-2 border-white hover:bg-yellow-300"
     : "bg-[#B8332A] text-white font-bold hover:bg-[#962820]";
@@ -19,9 +15,6 @@ export default function GovernanceView({ onNavigate, highContrast, pauseMotion }
   return (
     <div className="space-y-8 text-left">
       <div className="space-y-3 max-w-[65ch]">
-        <span className={`inline-block px-3 py-1 rounded text-xs ${badge}`}>
-          Registered British Columbia Non-Profit Society
-        </span>
         <h1
           className={`font-display text-3xl font-extrabold ${
             highContrast ? "text-white" : "text-[#0F2942]"
@@ -30,17 +23,14 @@ export default function GovernanceView({ onNavigate, highContrast, pauseMotion }
           About Us &amp; Board of Directors
         </h1>
         <p className="text-base max-w-[65ch]">
-          Every public event and artist opportunity will stay open to everyone in Greater
-          Vancouver. You will never need a private membership to attend or apply.
+          We are a registered British Columbia non-profit society. Every public event and
+          artist opportunity will stay open to everyone in Greater Vancouver.
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <article className={`rounded-xl p-6 flex flex-col justify-between space-y-4 ${cardSurface}`}>
+        <article className={`rounded-xl p-6 flex flex-col justify-between space-y-5 ${cardSurface}`}>
           <div className="space-y-3">
-            <span className={`inline-block px-2.5 py-0.5 rounded text-xs ${badge}`}>
-              Leadership
-            </span>
             <h2
               className={`font-display text-xl font-bold ${
                 highContrast ? "text-yellow-300" : "text-[#0F2942]"
@@ -61,15 +51,12 @@ export default function GovernanceView({ onNavigate, highContrast, pauseMotion }
             onClick={() => onNavigate("volunteer")}
             className={`px-4 py-2.5 rounded-lg text-sm min-h-[42px] text-left ${primaryBtn} ${motionClass}`}
           >
-            See Volunteer &amp; Media Info →
+            Volunteer &amp; Media List →
           </button>
         </article>
 
-        <article className={`rounded-xl p-6 flex flex-col justify-between space-y-4 ${cardSurface}`}>
+        <article className={`rounded-xl p-6 flex flex-col justify-between space-y-5 ${cardSurface}`}>
           <div className="space-y-3">
-            <span className={`inline-block px-2.5 py-0.5 rounded text-xs ${badge}`}>
-              Accountability
-            </span>
             <h2
               className={`font-display text-xl font-bold ${
                 highContrast ? "text-yellow-300" : "text-[#0F2942]"
@@ -88,15 +75,12 @@ export default function GovernanceView({ onNavigate, highContrast, pauseMotion }
             onClick={() => onNavigate("artists")}
             className={`px-4 py-2.5 rounded-lg text-sm min-h-[42px] text-left ${primaryBtn} ${motionClass}`}
           >
-            Join Our Artist List →
+            Want to join? Contact us →
           </button>
         </article>
 
-        <article className={`rounded-xl p-6 flex flex-col justify-between space-y-4 ${cardSurface}`}>
+        <article className={`rounded-xl p-6 flex flex-col justify-between space-y-5 ${cardSurface}`}>
           <div className="space-y-3">
-            <span className={`inline-block px-2.5 py-0.5 rounded text-xs ${badge}`}>
-              Transparency
-            </span>
             <h2
               className={`font-display text-xl font-bold ${
                 highContrast ? "text-yellow-300" : "text-[#0F2942]"
@@ -105,9 +89,8 @@ export default function GovernanceView({ onNavigate, highContrast, pauseMotion }
               How We Will Use Funds
             </h2>
             <p className="text-sm max-w-[65ch]">
-              We will put 100% of booth fees ($120 to $150) and sponsorships directly into
-              venue permits, event insurance, fair pay for artists and teachers, and free art
-              supplies.
+              We will put 100% of booth fees and sponsorships directly into venue permits,
+              event insurance, fair pay for artists and teachers, and free art supplies.
             </p>
           </div>
           <button

@@ -10,22 +10,22 @@ import DirectoryView from "../components/DirectoryView";
 import SponsorView from "../components/SponsorView";
 import GovernanceView from "../components/GovernanceView";
 import VolunteerView from "../components/VolunteerView";
+import NewsletterSection from "../components/NewsletterSection";
 import Footer from "../components/Footer";
 import {
-  validateArtistApplication,
+  validateArtistContactForm,
+  validateNewsletterForm,
   validateSponsorRequest,
-  validateWorkshopContact,
 } from "../lib/filters";
 
 const INITIAL_ARTIST_FORM = {
-  artistName: "",
-  email: "",
-  phone: "",
-  discipline: "Visual Art / Painting / Illustration",
+  joinType: "Get Listed in the Local Artist Directory (Open Now)",
+  artType: "Other Art (Write Yours Below)",
   customArtType: "",
-  portfolioLink: "",
-  accommodations: "",
-  photoName: "",
+  nameOrBusiness: "",
+  email: "",
+  websiteLink: "",
+  messageOrSpace: "",
 };
 
 export default function LocalArtApp() {
@@ -38,70 +38,42 @@ export default function LocalArtApp() {
   const [pauseMotion, setPauseMotion] = useState(false);
   const [plainLanguageLang, setPlainLanguageLang] = useState("en");
 
-  // Events filter state
-  const [eventCategory, setEventCategory] = useState("All");
-  const [eventSearch, setEventSearch] = useState("");
-
   // Directory filter state
   const [dirDiscipline, setDirDiscipline] = useState("All");
   const [dirSearch, setDirSearch] = useState("");
 
-  // Workshop 4-Field Contact Modal state
-  const [selectedWorkshop, setSelectedWorkshop] = useState(null);
-  const [bookingForm, setBookingForm] = useState({
-    fullName: "",
-    contact: "",
-    joinRole: "I am an artist / teacher with a workshop idea",
-    ideaOrLocation: "",
-  });
-  const [bookingConfirmed, setBookingConfirmed] = useState(null);
-  const [bookingError, setBookingError] = useState("");
-
-  // Artist Application & Booth Selector state ($120 Standard / $150 Full 10x10)
-  const [selectedBoothTier, setSelectedBoothTier] = useState("standard_120");
-  const [opportunityType, setOpportunityType] = useState(
-    "Get Listed in the Artist Directory (Free & Open Now)"
-  );
+  // Artist & Contact form state
   const [artistForm, setArtistForm] = useState(INITIAL_ARTIST_FORM);
-  const [autoSaveTimestamp, setAutoSaveTimestamp] = useState(
-    "Form notes saved in this browser"
-  );
   const [artistSubmitted, setArtistSubmitted] = useState(false);
   const [artistFormError, setArtistFormError] = useState("");
 
-  // Sponsor a Booth state
-  const [supportAmount, setSupportAmount] = useState(120);
+  // Sponsor a Booth state (no dollar amounts)
+  const [selectedSponsorOption, setSelectedSponsorOption] = useState("booth");
   const [supporterBusinessName, setSupporterBusinessName] = useState("");
   const [supporterEmail, setSupporterEmail] = useState("");
   const [taxAcknowledge, setTaxAcknowledge] = useState(false);
   const [invoiceGenerated, setInvoiceGenerated] = useState(false);
   const [sponsorError, setSponsorError] = useState("");
 
-  // Close drawer or modal with Escape key
+  // Persistent Pre-Footer Newsletter state
+  const [newsletterForm, setNewsletterForm] = useState({
+    firstName: "",
+    email: "",
+    role: "Visitor (Free Events & Workshops)",
+    consent: false,
+  });
+  const [newsletterError, setNewsletterError] = useState("");
+  const [newsletterSubmitted, setNewsletterSubmitted] = useState(false);
+
+  // Close drawer with Escape key
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === "Escape") {
         setAccessDrawerOpen(false);
-        setSelectedWorkshop(null);
       }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
-
-  // Load saved artist form draft from localStorage if present
-  useEffect(() => {
-    try {
-      const saved = window.localStorage.getItem("local_art_artist_draft");
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (parsed && typeof parsed === "object") {
-          setArtistForm((prev) => ({ ...prev, ...parsed }));
-        }
-      }
-    } catch {
-      // Ignore storage read errors in restricted frames
-    }
   }, []);
 
   const navigateTo = (page) => {
@@ -111,52 +83,23 @@ export default function LocalArtApp() {
     }
   };
 
-  const updateArtistField = (field, value) => {
-    setArtistForm((prev) => {
-      const next = { ...prev, [field]: value };
-      try {
-        window.localStorage.setItem("local_art_artist_draft", JSON.stringify(next));
-      } catch {
-        // Ignore storage write errors
+  const scrollToNewsletter = (e) => {
+    if (e) e.preventDefault();
+    if (typeof document !== "undefined") {
+      const target = document.getElementById("newsletter-signup");
+      if (target) {
+        target.scrollIntoView({ behavior: pauseMotion ? "auto" : "smooth" });
       }
-      return next;
-    });
-    const now = new Date();
-    setAutoSaveTimestamp(
-      `Form notes saved at ${now.toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit",
-      })}`
-    );
+    }
   };
 
-  const handleWorkshopSubmit = (e) => {
-    e.preventDefault();
-    const check = validateWorkshopContact(bookingForm);
-    if (!check.valid) {
-      setBookingError(check.error);
-      return;
-    }
-    setBookingError("");
-    setBookingConfirmed({
-      workshop: selectedWorkshop,
-      attendee: bookingForm.fullName.trim(),
-      contact: bookingForm.contact.trim(),
-      joinRole: bookingForm.joinRole,
-      ideaOrLocation: bookingForm.ideaOrLocation.trim(),
-    });
-    setBookingForm({
-      fullName: "",
-      contact: "",
-      joinRole: "I am an artist / teacher with a workshop idea",
-      ideaOrLocation: "",
-    });
-    setSelectedWorkshop(null);
+  const updateArtistField = (field, value) => {
+    setArtistForm((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleArtistSubmit = (e) => {
     e.preventDefault();
-    const check = validateArtistApplication(artistForm);
+    const check = validateArtistContactForm(artistForm);
     if (!check.valid) {
       setArtistFormError(check.error);
       return;
@@ -180,12 +123,24 @@ export default function LocalArtApp() {
     setInvoiceGenerated(true);
   };
 
-  const handleSelectArtistFromDirectory = (artTypeOption) => {
-    setOpportunityType("Get Listed in the Artist Directory (Free & Open Now)");
-    updateArtistField(
-      "discipline",
-      artTypeOption || "Other Art Type (Write below)"
-    );
+  const handleNewsletterSubmit = (e) => {
+    e.preventDefault();
+    const check = validateNewsletterForm(newsletterForm);
+    if (!check.valid) {
+      setNewsletterError(check.error);
+      return;
+    }
+    setNewsletterError("");
+    setNewsletterSubmitted(true);
+  };
+
+  const handleSelectArtistFromDirectory = (artTypeValue) => {
+    setArtistForm((prev) => ({
+      ...prev,
+      joinType: "Get Listed in the Local Artist Directory (Open Now)",
+      artType: artTypeValue || "Other Art (Write Yours Below)",
+    }));
+    setArtistSubmitted(false);
     navigateTo("artists");
   };
 
@@ -217,6 +172,7 @@ export default function LocalArtApp() {
         {activePage === "home" && (
           <HomeView
             onNavigate={navigateTo}
+            onScrollToNewsletter={scrollToNewsletter}
             highContrast={highContrast}
             pauseMotion={pauseMotion}
           />
@@ -224,11 +180,8 @@ export default function LocalArtApp() {
 
         {activePage === "events" && (
           <EventsView
-            eventCategory={eventCategory}
-            setEventCategory={setEventCategory}
-            eventSearch={eventSearch}
-            setEventSearch={setEventSearch}
             onNavigate={navigateTo}
+            onScrollToNewsletter={scrollToNewsletter}
             highContrast={highContrast}
             pauseMotion={pauseMotion}
           />
@@ -236,15 +189,8 @@ export default function LocalArtApp() {
 
         {activePage === "workshops" && (
           <WorkshopsView
-            selectedWorkshop={selectedWorkshop}
-            setSelectedWorkshop={setSelectedWorkshop}
-            bookingForm={bookingForm}
-            setBookingForm={setBookingForm}
-            bookingConfirmed={bookingConfirmed}
-            setBookingConfirmed={setBookingConfirmed}
-            bookingError={bookingError}
-            setBookingError={setBookingError}
-            onSubmitWorkshop={handleWorkshopSubmit}
+            onNavigate={navigateTo}
+            onScrollToNewsletter={scrollToNewsletter}
             highContrast={highContrast}
             pauseMotion={pauseMotion}
           />
@@ -252,17 +198,13 @@ export default function LocalArtApp() {
 
         {activePage === "artists" && (
           <ArtistsView
-            selectedBoothTier={selectedBoothTier}
-            setSelectedBoothTier={setSelectedBoothTier}
-            opportunityType={opportunityType}
-            setOpportunityType={setOpportunityType}
             artistForm={artistForm}
             updateArtistField={updateArtistField}
-            autoSaveTimestamp={autoSaveTimestamp}
             artistSubmitted={artistSubmitted}
             setArtistSubmitted={setArtistSubmitted}
             artistFormError={artistFormError}
             onSubmitArtist={handleArtistSubmit}
+            onScrollToNewsletter={scrollToNewsletter}
             highContrast={highContrast}
             pauseMotion={pauseMotion}
           />
@@ -275,6 +217,7 @@ export default function LocalArtApp() {
             dirSearch={dirSearch}
             setDirSearch={setDirSearch}
             onSelectArtistContact={handleSelectArtistFromDirectory}
+            onScrollToNewsletter={scrollToNewsletter}
             highContrast={highContrast}
             pauseMotion={pauseMotion}
           />
@@ -282,8 +225,8 @@ export default function LocalArtApp() {
 
         {(activePage === "support" || activePage === "sponsor") && (
           <SponsorView
-            supportAmount={supportAmount}
-            setSupportAmount={setSupportAmount}
+            selectedSponsorOption={selectedSponsorOption}
+            setSelectedSponsorOption={setSelectedSponsorOption}
             supporterBusinessName={supporterBusinessName}
             setSupporterBusinessName={setSupporterBusinessName}
             supporterEmail={supporterEmail}
@@ -294,6 +237,7 @@ export default function LocalArtApp() {
             setInvoiceGenerated={setInvoiceGenerated}
             sponsorError={sponsorError}
             onSubmitSponsor={handleSponsorSubmit}
+            onScrollToNewsletter={scrollToNewsletter}
             highContrast={highContrast}
             pauseMotion={pauseMotion}
           />
@@ -310,11 +254,23 @@ export default function LocalArtApp() {
         {activePage === "volunteer" && (
           <VolunteerView
             onNavigate={navigateTo}
+            onScrollToNewsletter={scrollToNewsletter}
             highContrast={highContrast}
             pauseMotion={pauseMotion}
           />
         )}
       </main>
+
+      <NewsletterSection
+        newsletterForm={newsletterForm}
+        setNewsletterForm={setNewsletterForm}
+        newsletterError={newsletterError}
+        newsletterSubmitted={newsletterSubmitted}
+        setNewsletterSubmitted={setNewsletterSubmitted}
+        onSubmitNewsletter={handleNewsletterSubmit}
+        highContrast={highContrast}
+        pauseMotion={pauseMotion}
+      />
 
       <Footer onNavigate={navigateTo} highContrast={highContrast} />
     </div>

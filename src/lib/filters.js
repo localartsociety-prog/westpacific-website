@@ -1,70 +1,46 @@
-export function filterEvents(events, category, searchQuery) {
+export function filterDirectoryCards(cards, discipline, searchQuery) {
   const normalizedQuery = (searchQuery || "").trim().toLowerCase();
-  return events.filter((evt) => {
-    const matchesCategory = category === "All" || evt.category === category;
-    if (!matchesCategory) return false;
-    if (!normalizedQuery) return true;
-    return (
-      evt.title.toLowerCase().includes(normalizedQuery) ||
-      evt.plannedArea.toLowerCase().includes(normalizedQuery) ||
-      evt.summary.toLowerCase().includes(normalizedQuery)
-    );
-  });
+
+  return cards
+    .map((card) => {
+      if (card.id === "dir-4") {
+        if (discipline === "Music") {
+          return { ...card, displayTitle: "Music Artist", artTypeValue: "Music" };
+        }
+        if (discipline === "Other Art") {
+          return {
+            ...card,
+            displayTitle: "Other Art Artist",
+            artTypeValue: "Other Art (Write Yours Below)",
+          };
+        }
+      }
+      return { ...card, displayTitle: card.title };
+    })
+    .filter((card) => {
+      const matchesDiscipline =
+        discipline === "All" ||
+        card.category === discipline ||
+        (card.id === "dir-4" && (discipline === "Music" || discipline === "Other Art"));
+
+      if (!matchesDiscipline) return false;
+      if (!normalizedQuery) return true;
+
+      return (
+        card.displayTitle.toLowerCase().includes(normalizedQuery) ||
+        card.category.toLowerCase().includes(normalizedQuery) ||
+        card.description.toLowerCase().includes(normalizedQuery)
+      );
+    });
 }
 
-export function filterDirectoryArtists(artists, discipline, searchQuery) {
-  const normalizedQuery = (searchQuery || "").trim().toLowerCase();
-  if (discipline === "Other Art") {
-    return [];
-  }
-  return artists.filter((artist) => {
-    const matchesDiscipline =
-      discipline === "All" || artist.discipline === discipline;
-    if (!matchesDiscipline) return false;
-    if (!normalizedQuery) return true;
-    return (
-      artist.name.toLowerCase().includes(normalizedQuery) ||
-      artist.discipline.toLowerCase().includes(normalizedQuery) ||
-      artist.artTypeOption.toLowerCase().includes(normalizedQuery) ||
-      artist.description.toLowerCase().includes(normalizedQuery)
-    );
-  });
-}
-
-export function getBoothTierDetails(tier) {
-  if (tier === "full_150") {
-    return {
-      id: "full_150",
-      fee: 150,
-      label: "$150 Full 10x10 Booth",
-    };
-  }
-  return {
-    id: "standard_120",
-    fee: 120,
-    label: "$120 Standard Booth",
-  };
-}
-
-export function validateWorkshopContact(form) {
-  const name = (form?.fullName || "").trim();
-  const contact = (form?.contact || "").trim();
-  if (!name || !contact) {
-    return {
-      valid: false,
-      error: "Please enter your name or business name and your email or phone number.",
-    };
-  }
-  return { valid: true, error: "" };
-}
-
-export function validateArtistApplication(form) {
-  const artistName = (form?.artistName || "").trim();
+export function validateArtistContactForm(form) {
+  const name = (form?.nameOrBusiness || "").trim();
   const email = (form?.email || "").trim();
-  if (!artistName || !email) {
+  if (!name || !email) {
     return {
       valid: false,
-      error: "Please enter your name or studio name and your email address.",
+      error: "Please enter your name or business name and your email address.",
     };
   }
   return { valid: true, error: "" };
@@ -81,6 +57,22 @@ export function validateSponsorRequest({ businessName, email, taxAcknowledge }) 
     return {
       valid: false,
       error: "Please enter your business or supporter name and email address.",
+    };
+  }
+  return { valid: true, error: "" };
+}
+
+export function validateNewsletterForm({ firstName, email, consent }) {
+  if (!(firstName || "").trim() || !(email || "").trim()) {
+    return {
+      valid: false,
+      error: "Please enter your first name and email address.",
+    };
+  }
+  if (!consent) {
+    return {
+      valid: false,
+      error: "Please check the consent box so we can send future email updates.",
     };
   }
   return { valid: true, error: "" };

@@ -3,88 +3,49 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 import {
-  EVENTS_DATA,
-  DIRECTORY_ARTISTS,
-  WORKSHOPS_DATA,
+  DIRECTORY_CARDS,
   WORKSHOP_PARTNERS,
   MANDATE_ITEMS,
-  SPONSOR_TIERS,
+  SPONSOR_OPTIONS,
   PLAIN_LANGUAGE_SUMMARIES,
   BOARD_MEMBERS,
-  VOLUNTEER_ROLES,
 } from "../data/siteContent.js";
 import {
-  filterEvents,
-  filterDirectoryArtists,
-  getBoothTierDetails,
-  validateWorkshopContact,
-  validateArtistApplication,
+  filterDirectoryCards,
+  validateArtistContactForm,
   validateSponsorRequest,
+  validateNewsletterForm,
 } from "./filters.js";
 
-test("filterEvents filters by category and search query", () => {
-  assert.equal(filterEvents(EVENTS_DATA, "All", "").length, 3);
-  assert.equal(filterEvents(EVENTS_DATA, "Exhibitions", "").length, 1);
-  assert.equal(filterEvents(EVENTS_DATA, "All", "potters").length, 2);
-  assert.equal(filterEvents(EVENTS_DATA, "Concerts", "nonexistent").length, 0);
+test("filterDirectoryCards handles All, Ceramics, Music, Other Art, and search", () => {
+  const all = filterDirectoryCards(DIRECTORY_CARDS, "All", "");
+  assert.equal(all.length, 4);
+  assert.equal(all[3].displayTitle, "Music & Other Art Artist");
+
+  const ceramics = filterDirectoryCards(DIRECTORY_CARDS, "Ceramics", "");
+  assert.equal(ceramics.length, 1);
+  assert.equal(ceramics[0].displayTitle, "Ceramic Artist");
+
+  const music = filterDirectoryCards(DIRECTORY_CARDS, "Music", "");
+  assert.equal(music.length, 1);
+  assert.equal(music[0].displayTitle, "Music Artist");
+
+  const otherArt = filterDirectoryCards(DIRECTORY_CARDS, "Other Art", "");
+  assert.equal(otherArt.length, 1);
+  assert.equal(otherArt[0].displayTitle, "Other Art Artist");
+
+  const searchPrint = filterDirectoryCards(DIRECTORY_CARDS, "All", "Print");
+  assert.equal(searchPrint.length, 1);
+  assert.equal(searchPrint[0].displayTitle, "Print Artist");
 });
 
-test("filterDirectoryArtists filters by discipline, Other Art, and search query", () => {
-  assert.equal(filterDirectoryArtists(DIRECTORY_ARTISTS, "All", "").length, 4);
-  assert.equal(filterDirectoryArtists(DIRECTORY_ARTISTS, "Ceramics", "").length, 1);
-  assert.equal(filterDirectoryArtists(DIRECTORY_ARTISTS, "Other Art", "").length, 0);
-  assert.equal(filterDirectoryArtists(DIRECTORY_ARTISTS, "All", "Music").length, 1);
-});
-
-test("directory cards are live now and titled Artist without Future or Coming Soon", () => {
-  assert.equal(DIRECTORY_ARTISTS.length, 4);
-  for (const card of DIRECTORY_ARTISTS) {
-    assert.equal(card.name, "Artist");
-    assert.equal(card.statusBadge, "Open Now • Greater Vancouver");
-    assert.equal(/future|coming soon/i.test(JSON.stringify(card)), false);
-  }
-  const dirComponent = fs.readFileSync(
-    path.resolve(process.cwd(), "src/components/DirectoryView.js"),
-    "utf8"
-  );
-  assert.equal(/future|coming soon/i.test(dirComponent), false);
-});
-
-test("workshops and partner cards match exact specifications", () => {
-  assert.deepEqual(
-    WORKSHOPS_DATA.map((w) => w.title),
-    [
-      "Block Printing on Cotton Bags",
-      "Hand-Built Clay Pottery",
-      "Botanical Watercolour Painting",
-    ]
-  );
-  assert.equal(WORKSHOP_PARTNERS.length, 4);
-});
-
-test("getBoothTierDetails returns exact $120 and $150 booth prices", () => {
-  assert.deepEqual(getBoothTierDetails("standard_120"), {
-    id: "standard_120",
-    fee: 120,
-    label: "$120 Standard Booth",
-  });
-  assert.deepEqual(getBoothTierDetails("full_150"), {
-    id: "full_150",
-    fee: 150,
-    label: "$150 Full 10x10 Booth",
-  });
-});
-
-test("form validations require non-empty fields", () => {
-  assert.equal(validateWorkshopContact({ fullName: "", contact: "" }).valid, false);
+test("form validations enforce required fields and CASL/tax consent", () => {
   assert.equal(
-    validateWorkshopContact({ fullName: "Jordan", contact: "jordan@example.ca" }).valid,
-    true
+    validateArtistContactForm({ nameOrBusiness: "", email: "a@b.ca" }).valid,
+    false
   );
-
-  assert.equal(validateArtistApplication({ artistName: "", email: "a@b.ca" }).valid, false);
   assert.equal(
-    validateArtistApplication({ artistName: "Studio", email: "a@b.ca" }).valid,
+    validateArtistContactForm({ nameOrBusiness: "Studio", email: "a@b.ca" }).valid,
     true
   );
 
@@ -104,10 +65,21 @@ test("form validations require non-empty fields", () => {
     }).valid,
     true
   );
+
+  assert.equal(
+    validateNewsletterForm({ firstName: "Sam", email: "sam@example.ca", consent: false }).valid,
+    false
+  );
+  assert.equal(
+    validateNewsletterForm({ firstName: "Sam", email: "sam@example.ca", consent: true }).valid,
+    true
+  );
 });
 
-test("content and components contain zero forbidden jargon or maker terminology", () => {
+test("entire codebase has zero dollar prices, zero rounded-full pills, and zero forbidden words", () => {
   const forbiddenPatterns = [
+    /\$\d+/,
+    /rounded-full/,
     /\bmaker\b/i,
     /\bmakers\b/i,
     /supabase/i,
@@ -121,6 +93,7 @@ test("content and components contain zero forbidden jargon or maker terminology"
     /\bCRRA\b/,
     /\bCARFAC\b/,
     /\bCFM\b/,
+    /Wheelchair & Transit Standards/i,
   ];
 
   const srcRoot = path.resolve(process.cwd(), "src");
@@ -150,9 +123,9 @@ test("content and components contain zero forbidden jargon or maker terminology"
     }
   }
 
+  assert.equal(WORKSHOP_PARTNERS.length, 4);
   assert.equal(MANDATE_ITEMS.length, 4);
-  assert.equal(SPONSOR_TIERS.length, 4);
+  assert.equal(SPONSOR_OPTIONS.length, 4);
   assert.equal(BOARD_MEMBERS.length, 3);
-  assert.equal(VOLUNTEER_ROLES.length, 2);
   assert.ok(PLAIN_LANGUAGE_SUMMARIES.en && PLAIN_LANGUAGE_SUMMARIES.pa);
 });
